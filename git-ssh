@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/usr/bin/ssh -o StrictHostKeyChecking=no -i /var/local/git-update-id_rsa "$@"

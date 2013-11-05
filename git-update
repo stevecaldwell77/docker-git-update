@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+
+use 5.10.0;
+use strict;
+use warnings;
+use autodie;
+use Getopt::Long;
+use IPC::System::Simple qw(capture system);
+
+my $gitdir = undef;
+
+GetOptions (
+    'gitdir=s' => \$gitdir,
+) or die;
+
+my ($repository, $target) = @ARGV;
+$repository or die 'no repository';
+$target     or die 'no target';
+
+$gitdir ||= "$target/.git";
+my $separate_gitdir = ($gitdir ne "$target/.git");
+
+$ENV{GIT_SSH} = '/var/local/bin/git-update-ssh';
+
+if (not -d $gitdir) {
+    system(
+        'git', 'clone', $repository,
+        '--depth', 1,
+        ($separate_gitdir ? ('--separate-git-dir', $gitdir) : ()),
+        $target,
+    );
+}
+
+chdir $target;
+
+system('git', '--git-dir', $gitdir, 'reset', '--hard');
+system('git', 'clean', '-fdx');
+system('git', '--git-dir', $gitdir, 'checkout', 'master');
+system('git', '--git-dir', $gitdir, 'pull');
+
+exit 0;
+
+1;
