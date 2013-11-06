@@ -33,10 +33,10 @@ if (not -d $gitdir) {
 
 chdir $target;
 
-system('git', '--git-dir', $gitdir, 'reset', '--hard');
-system('git', 'clean', '-fdx');
-system('git', '--git-dir', $gitdir, 'checkout', 'master');
-system('git', '--git-dir', $gitdir, 'pull');
+system('git', 'reset', '-q', '--hard');
+system('git', 'clean', '-q', '-fdx');
+system('git', 'checkout', '-q', 'master');
+system('git', 'pull', '-q');
 
 exit 0;
 
