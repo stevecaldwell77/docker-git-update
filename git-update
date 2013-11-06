@@ -20,8 +20,6 @@ $target     or die 'no target';
 $gitdir ||= "$target/.git";
 my $separate_gitdir = ($gitdir ne "$target/.git");
 
-$ENV{GIT_SSH} = '/var/local/bin/git-update-ssh';
-
 if (not -d $gitdir) {
     system(
         'git', 'clone', $repository,
